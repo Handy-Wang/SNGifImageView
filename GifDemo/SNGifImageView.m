@@ -234,8 +234,6 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         while (true) {
             @autoreleasepool {
-//                NSDate *past = (NSDate *)[NSDate date];
-                
                 SNGifImage *gifImage = [self.queue dequeue];
                 dispatch_sync(dispatch_get_main_queue(), ^{
                     GifDebugLog(@"Before Consume condition lock : %d", self.conditionLock.condition);
@@ -248,12 +246,8 @@
                     [self.conditionLock unlockWithCondition:kSigal_NO_DATA];
                     GifDebugLog(@"After Consume condition lock : %d", self.conditionLock.condition);
                 });
-                
-                /**
-                 * 因为按实际的时长gifImage.delayTime发现偏慢，可能是因为sleepForTimeInterval有延迟，所以减去0.62
-                 */
-                double detlayDuration = gifImage.delayTime-0.062;
-                
+
+                double detlayDuration = gifImage.delayTime;
                 [NSThread sleepForTimeInterval:detlayDuration];
             }
         }
@@ -309,10 +303,32 @@
 #pragma mark -
 - (void)setImageName:(NSString *)imageName {
     NSString *path = [[NSBundle mainBundle] pathForResource:imageName ofType:nil];
-    NSData *data = [NSData dataWithContentsOfFile:path];
     
-    if (data) {
-        [self.producer reload:(data)];
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    [self reload:data];
+}
+
+- (void)setImageUrl:(NSString *)imageUrl {
+    if (imageUrl.length <= 0) {
+        return;
+    }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]];
+        [self reload:data];
+    });
+}
+
+- (void)reload:(NSData *)imageData {
+    if (![[NSThread currentThread] isMainThread]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self reload:imageData];
+        });
+        return;
+    }
+    
+    if (!!imageData) {
+        [self.producer reload:imageData];
         [self.producer produceInThread];
         [self.consumer consumeInThread];
     }

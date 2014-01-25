@@ -11,5 +11,6 @@
 @interface SNGifImageView : UIImageView
 
 - (void)setImageName:(NSString *)imageName;
+- (void)setImageUrl:(NSString *)imageUrl;
 
 @end
