@@ -126,9 +126,7 @@
 @property (nonatomic, retain)SNGifImageKeyFramesQueue *queue;
 @property (nonatomic, retain)NSConditionLock *conditionLock;
 
-//gif加载环境
-@property (nonatomic, retain)NSData *data;
-@property (nonatomic, assign)CGImageSourceRef source;
+@property (nonatomic, retain)NSData *imageData;
 @property (nonatomic, assign)size_t dataFrameCount;
 @end
 
@@ -139,15 +137,6 @@
     if (self) {
         self.queue = queue;
         self.conditionLock = lock;
-        
-        //初始化gif加载环境
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"iwatch" ofType:@"gif"];
-        self.data = [NSData dataWithContentsOfFile:path];
-        
-        if (self.data) {
-            self.source = CGImageSourceCreateWithData((__bridge CFDataRef)self.data, NULL);
-            self.dataFrameCount = CGImageSourceGetCount(self.source);
-        }
     }
     return self;
 }
@@ -155,11 +144,23 @@
 - (void)dealloc {
     self.queue = nil;
     self.conditionLock = nil;
-    
-    self.data = nil;
-    CFRelease(self.source);
+
+    self.imageData = nil;
     
     [super dealloc];
+}
+
+#pragma mark -
+- (void)reload:(NSData *)imageData {
+    if (!imageData) {
+        return;
+    }
+    
+    self.imageData = imageData;
+    
+    CGImageSourceRef imageSource = CGImageSourceCreateWithData((__bridge CFDataRef)self.imageData, NULL);
+    self.dataFrameCount = CGImageSourceGetCount(imageSource);
+    CFRelease(imageSource);
 }
 
 - (void)produceInThread {
@@ -183,18 +184,20 @@
 
 - (SNGifImage *)loadAGifKeyFrameFromSourceWithIndex:(int)index {
     index = index%self.dataFrameCount;
-    if (!(self.data) || self.dataFrameCount <= 0 || index > self.dataFrameCount) {
+    if (self.dataFrameCount <= 0 || index > self.dataFrameCount) {
         return nil;
     }
     
     SNGifImage *gifImage = [[SNGifImage alloc] init];
     
-    CGImageRef image = CGImageSourceCreateImageAtIndex(self.source, index, NULL);
+    CGImageSourceRef imageSource = CGImageSourceCreateWithData((__bridge CFDataRef)self.imageData, NULL);
+    CGImageRef image = CGImageSourceCreateImageAtIndex(imageSource, index, NULL);
     gifImage.content = [UIImage imageWithCGImage:image scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp];
     
     CGImageRelease(image);
     
-    NSDictionary *frameProperties = CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(self.source, index, NULL));
+    NSDictionary *frameProperties = CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(imageSource, index, NULL));
+    CFRelease(imageSource);
     NSTimeInterval duration = [[[frameProperties objectForKey:(NSString*)kCGImagePropertyGIFDictionary] objectForKey:(NSString*)kCGImagePropertyGIFDelayTime] doubleValue];
     if (!duration) {
         duration = 1.0f/10.0f;//(十分之一秒)
@@ -252,17 +255,6 @@
                 double detlayDuration = gifImage.delayTime-0.062;
                 
                 [NSThread sleepForTimeInterval:detlayDuration];
-                
-//                NSTimeInterval codeExcutionCost = [(NSDate *)[NSDate date] timeIntervalSinceDate:past];
-//                NSTimeInterval originalDelayTime = gifImage.delayTime;
-//
-//                if (originalDelayTime > codeExcutionCost) {
-//                    NSTimeInterval finalDelayTime = originalDelayTime-codeExcutionCost;
-//                    [NSThread sleepForTimeInterval:finalDelayTime];
-//                }
-//                else {
-//                    [NSThread sleepForTimeInterval:originalDelayTime];
-//                }
             }
         }
     });
@@ -315,9 +307,15 @@
 }
 
 #pragma mark -
-- (void)layout {
-    [self.producer produceInThread];
-    [self.consumer consumeInThread];
+- (void)setImageName:(NSString *)imageName {
+    NSString *path = [[NSBundle mainBundle] pathForResource:imageName ofType:nil];
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    
+    if (data) {
+        [self.producer reload:(data)];
+        [self.producer produceInThread];
+        [self.consumer consumeInThread];
+    }
 }
 
 @end

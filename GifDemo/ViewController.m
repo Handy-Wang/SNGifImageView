@@ -23,8 +23,8 @@
     [super viewDidLoad];
     
     SNGifImageView *gifImageView = [[SNGifImageView alloc] initWithFrame:self.view.bounds];
+    [gifImageView setImageName:@"iwatch.gif"];
     [self.view addSubview:gifImageView];
-    [gifImageView layout];
     [gifImageView release];
     gifImageView = nil;
 }

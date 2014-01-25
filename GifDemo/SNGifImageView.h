@@ -10,6 +10,6 @@
 
 @interface SNGifImageView : UIImageView
 
-- (void)layout;
+- (void)setImageName:(NSString *)imageName;
 
 @end
