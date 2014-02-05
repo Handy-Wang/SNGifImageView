@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		71234B9918924E36004B24A8 /* SNGifImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 71234B9818924E36004B24A8 /* SNGifImageView.m */; };
+		33510DBC18A1F09C008F2A44 /* SNGifImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 33510DBB18A1F09C008F2A44 /* SNGifImageView.m */; };
 		713AFE661890C09500EB813F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 713AFE651890C09500EB813F /* Foundation.framework */; };
 		713AFE681890C09500EB813F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 713AFE671890C09500EB813F /* CoreGraphics.framework */; };
 		713AFE6A1890C09500EB813F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 713AFE691890C09500EB813F /* UIKit.framework */; };
@@ -37,8 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		71234B9718924E36004B24A8 /* SNGifImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNGifImageView.h; sourceTree = "<group>"; };
-		71234B9818924E36004B24A8 /* SNGifImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNGifImageView.m; sourceTree = "<group>"; };
+		33510DBA18A1F09C008F2A44 /* SNGifImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNGifImageView.h; sourceTree = "<group>"; };
+		33510DBB18A1F09C008F2A44 /* SNGifImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNGifImageView.m; sourceTree = "<group>"; };
 		713AFE621890C09500EB813F /* GifDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GifDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		713AFE651890C09500EB813F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		713AFE671890C09500EB813F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -86,6 +86,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		33510DB918A1F09C008F2A44 /* SNGifImageView */ = {
+			isa = PBXGroup;
+			children = (
+				33510DBA18A1F09C008F2A44 /* SNGifImageView.h */,
+				33510DBB18A1F09C008F2A44 /* SNGifImageView.m */,
+			);
+			path = SNGifImageView;
+			sourceTree = "<group>";
+		};
 		713AFE591890C09500EB813F = {
 			isa = PBXGroup;
 			children = (
@@ -121,14 +130,13 @@
 			children = (
 				713AFE741890C09500EB813F /* AppDelegate.h */,
 				713AFE751890C09500EB813F /* AppDelegate.m */,
-				71234B9718924E36004B24A8 /* SNGifImageView.h */,
-				71234B9818924E36004B24A8 /* SNGifImageView.m */,
 				713AFE771890C09500EB813F /* Main.storyboard */,
 				713AFE7A1890C09500EB813F /* ViewController.h */,
 				713AFE7B1890C09500EB813F /* ViewController.m */,
 				713AFE9A1890C14E00EB813F /* iwatch.gif */,
 				7193DD1718936E7800F35188 /* cat.gif */,
 				713AFE7D1890C09500EB813F /* Images.xcassets */,
+				33510DB918A1F09C008F2A44 /* SNGifImageView */,
 				713AFE6C1890C09500EB813F /* Supporting Files */,
 			);
 			path = GifDemo;
@@ -262,7 +270,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				71234B9918924E36004B24A8 /* SNGifImageView.m in Sources */,
+				33510DBC18A1F09C008F2A44 /* SNGifImageView.m in Sources */,
 				713AFE7C1890C09500EB813F /* ViewController.m in Sources */,
 				713AFE761890C09500EB813F /* AppDelegate.m in Sources */,
 				713AFE721890C09500EB813F /* main.m in Sources */,

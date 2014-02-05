@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^GifImageLoadComplete_blk)(void);
+typedef void(^GifImageLoadFail_blk)(void);
+
 @interface SNGifImageView : UIImageView
 
 - (void)setImageName:(NSString *)imageName;
-- (void)setImageUrl:(NSString *)imageUrl;
+- (void)setImageUrl:(NSString *)imageUrl fail:(GifImageLoadFail_blk)failBlk complete:(GifImageLoadComplete_blk)completeBlk;
 
 @end

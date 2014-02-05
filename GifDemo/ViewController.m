@@ -37,7 +37,15 @@
      */
     
     SNGifImageView *gifImageView = [[SNGifImageView alloc] initWithFrame:self.view.bounds];
-    [gifImageView setImageUrl:@"http://cdn.duitang.com/uploads/item/201209/05/20120905104848_Bh3BR.thumb.600_0.gif"];
+    [gifImageView setImageUrl:@"http://cdn.duitang.com/uploads/item/201209/05/20120905104848_Bh3BR.thumb.600_0.gif"
+                         fail:^{
+                             NSLog(@"Failed to load gif image from remote server.");
+                         }
+                     complete:^{
+                             NSLog(@"succeed to load gif image from remote server.");
+                     }
+     ];
+    
     [self.view addSubview:gifImageView];
     [gifImageView release];
     gifImageView = nil;

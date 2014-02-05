@@ -308,13 +308,20 @@
     [self reload:data];
 }
 
-- (void)setImageUrl:(NSString *)imageUrl {
+- (void)setImageUrl:(NSString *)imageUrl fail:(GifImageLoadFail_blk)failBlk complete:(GifImageLoadComplete_blk)completeBlk {
     if (imageUrl.length <= 0) {
+        failBlk();
         return;
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]];
+        if (!!data) {
+            completeBlk();
+        }
+        else {
+            failBlk();
+        }
         [self reload:data];
     });
 }
